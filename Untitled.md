@@ -1,0 +1,114 @@
+#Problem Solving HW 13
+
+**16.1-2**  
+
+First sort the activities by the start time in **decending** order. Then pick the first acivity and then recursively pick the first activity that is compatible with last activity.  
+
+    RECURSIVE-ACTIVITY-SELECTOR(s,f,k,n)
+    m = k + 1
+    while (m <= n && f[m] > s[k]) 
+    	m = m + 1
+    if (m <= n)
+    	return {a[m]}U RECURSIVE-ACTIVITY-SELECTOR(s,f,m,n)
+    \\Markdown doesn't support LaTex in code block
+    \\So I use U instead of the union symbol. 
+	else return NULL
+
+Now let's prove this greedy choice is correct, since the previous content has already proved that this problem exhibits optimal substructure.  
+
+We can do this easily by rewriting the Theorem 16.1  
+
+Consider any nonempty subproblem $S_{k}$, and let $a_m$ be an activity in $S_k$ with the latest start time. Then $a_m$ is included in some maximum-size subset of mutually compatible activities.
+
+***Proof***
+
+Let $A_k$ be a solution. If $a_m$ is included then we finished. If $a_m$ is not included. Then we can simplely change the last activity in $A_k$(say $a_s$) with $a_m$. Since $a_m$ must begin later than $a_s$ . And since no activity ends after $a_s$ begins, then the new set we got is still mutually compatible. Then we finished the proof.
+
+**16.1-3**
+
+* Let $s_1 = 1$ $s_2 = 4$ $s_3 = 3$ and $f_1 = 4$ $f_2 = 8$ $f_3 = 5$. In this case if we select the activity with the least duration $a_3$, then it is impossible to get the corrent answer {$a_1$,$a_2$}.
+* For convenience, we use $a_k$ = [x,y] to denote that $a_k$ begin at x and finish at y. So let $a_1$ = [1,3] $a_2$ = [3,5] $a_3$ = [5,7] $a_4$ = [7,9] $a_5$ = [4,6]. Obvioulsy the answer is {$a_1$..$a_4$}. Now consider a extreme case in which we add 100 activities that begin at 1 end at 4 and another 100 activities begin at 6 end at 9. Obviously the answer is still {$a_1$..$a_4$}. But if we just pick up the one with the least overlapping, then you would pick $a_5$ since it only overlaps with 2 activities. Then there is no way you can get the corrent answer.
+* This one is very easy. Let $a_1$ =[1,10] $a_2$ = [2,3] $a_3$ = [3,4]. Definately the answer is {$a_2$,$a_3$}, but $a_1$ is the earliest one to start , then you will pick it and get the wrong answer.  
+
+**16.2-1**  
+
+**Theroem**  
+Consider a subproblem with a backpack of volumn W and with k items. Then the solution to this subproblem must contain as much $a_c$ as possibe. And $a_c$ has the highest value per pound.(suppose all the items have different value per pound since if there are 2 with the same value per pound we can simplely regard them as one item) 
+
+***Proof***  
+Suppose that there exists a solution that doesn't contain as much $a_c$ as possible, which mains there are still some $a_c$ left and the bag is not full of $a_c$. So we can cut a little slice of good in the bag which is not $a_c$.Since $a_c$ has the highest value per pound, this slice is cheaper than the same amount of $a_c$, so we can just replace it with a slice of $a_c$ and obtain a better solution which contradicts to our assumption. So the fraction knapsack problem has the greedy-choice property.
+
+**16.2-2**
+
+We use [n,W] to denote the highest value we can obtain with first n items and a backpack of volume W.  
+Then we can have the transfer formula  
+$[n,W]$ = $
+\begin{cases}
+0& W = 0\ or\ n = 0 \\
+[n-1,W]& a_n.weight > W\\
+\min \{[n-1,W],[n-1,W-a_n.weight]+a_n.value\}& \text{otherwise}
+\end{cases}$   
+So it is easy to desigh a top-down approch to solve this problem. (The pseudocode is not required so I ignore it)  
+*Explanation*  
+For a item $a_n$ we can choose either to put it in the bag or not to. We have proved that the 0-1 Knapsack problem exhibits the optimal substructure, so we have the formula.  
+*Complexity*  
+Obviosly there are nW subproblems, solving each of them relies on 2 other subproblems. So the total complexity is O(nW).
+
+**16.3-2**  
+
+Suppose that there exists there exists a binary tree that is not full correspondint to an optimal prefix code. So there exist a node X that only has one child (if it has no children, then this node can be removed which would make its parent have only one child.) Then we can simplely replace this node with its child. This will cause the height of all the leaves that can chase back to X decrease 1. Since no leaf has its height increased and at least one leaf has its height decreased. So this would make the cost of this tree decrease and therefore contridicts to our assumption.  
+
+**16.3-5**
+
+Let's consider the first situation in which none of the words in the alphabeta have the same frequency. In this case the codewords must be monotonically increasing.
+
+***Proof***  
+
+suppose that on the contrary there exits an optimal code whose codeword for $a_k$ is longer than $a_l$ but $l > k$ which means $a_k$ has a bigger frequency. Then we can exchange the codewords of $a_k$ and $a_l$. Obviously the total cost decreased which contradicts to our assumption. So the theroem holds.  
+
+Now let's observe the general situation in which some words may share frequency. First we use the greedy method algorithm mentioned in this chapter to assign a Huffman Code to each word. Now that we devide the words in the alphabeta in to groups, the words in the same group have the same frequency.(Obvously the worlds in the same group are successive) Denote these groups as $S_1S_2...S_n$. Then for each group, we rearrange the codewords so that the codewords' lengths are in monotonically increasing order.(because all the words in the same group have the same frequency, exchanging within the group doesn't change the total cost) Then for any 2 groups $S_a$ and $S_b$, if  $a<b$ then the longest codeword in $S_a$ is not longer than the shortest codeword in $S_b$. The proof to this theroem is exactly the same as the proof above (if exits ... then swap them ... contradiction occurs). Combine these results, we know that all the codewords are in monotonically increasing order in terms of length.  
+
+**16.3-8**  
+
+Obiviously the sum of the frenquency of any 2 words is bigger than the frenquency of any other word. So that during the first 128 stages of the procedure, we build 128 subtrees with only 2 leaves. Then for these 128 subtrees we also have that the sum of the frenquency of any 2 trees is bigger than the frenquency of any other trees. So finally we will build a complete binary tree with all leaves at depth 8. So it is definately not more efficient than an ordinary 8-bit fixed-length code.  
+
+**16-1**  
+   
+* The algorithm itself is very easy, we can simplely use a greedy algorithm in which we first change the money to quarters as many as possible then dimes, nickles and pennies. So let's focus on the proof of the correctness of this algorithm.
+
+***Optimal Substructure***
+
+Let's prove this problem exhibits optimal substructure. Let  $S_n$ to be the minimum number of coins need to change n cents.Then for any solution, we can take any of the coins out, the rest is still a optimal solution for the rest of money. More precisely, we have the transfer formula:  
+$S_n$ = $
+\begin{cases}
+1& \text{n equals to some denomination of the conis}\\
+\min \limits_{1 \leq i \leq k}\{1+S_{n-a_i}\} & \text{otherwise}
+\end{cases}$ 
+Suppose that on the contray there exists a optimal solution for changing n cents in which we take one coin out of it the rest is not a optimal solution. Then we can simplely repalce them with the optimal solution and thus make a better solution. This is contradicts to our assumption, so this problem exhibits optimal substructure.  
+
+***Greedy Choice***  
+
+Let $A_n$ to be a solution of changing n cents Then one obtimal solution must contain the biggest denomination of coin that is smaller than n.  
+Suppose there exists an solution that contradicts to this condition.
+In this situation $a_k$(the biggest coin) can be 15 10 and 5 (1 is obvious).  
+*$a_k$ = 15*  
+Then the n must be more than or equal to 15. This part can be $10*2$, $10*1 + 5*1$,  $5*3$, $15 * 1$ ,$1*10 + 5*1$, $1*5 + 10*1$,$5*2 + 1*5$,$1*15$. All these combination except $10*2$ can be change to only 1 quarter which yields a better solution, so it can be only $2*10$, in this case we can change it to $15*1+5*1$ which is also an optimal solution, so this case holds.  
+*$a_k = 10$*  
+Then the solution contains at least 2 of coins(2 nickels). So change them with one dim yields a better solution, which is impossible so this cae holds too.  
+*$a_k = 5$*   
+Then the solution contains at least 5 of pennies which can be change to 1 nickels which is also impossible then this case holds.  
+So we have all cases hold for the greedy choice property.  
+
+* We only need to expand the proof above.
+
+*$a_k = c^k$*  
+This is a general case.In this situation n must be at least $c^k$ . To make $c^k$ needs at least c coins (c > 1), since $c^k$ can be divided with no reminder by all other kinds of coin that is smaller than $a_k$. So you can always find a proper amount of coins whose total value is $c^k$, exchange them with $c^k$ yields a better solution. So the greedy choice property holds in this solution.  
+
+* We have coin of {10,9,1} we wish to change 88 cents. The greedy algorithm will have the result $10*8+1*8$. But $10*7+9*2$ yields a better solution.  
+* Let's use the transfer formula:  
+$S_n$ = $
+\begin{cases}
+0& \text{n = 0}\\
+\min \limits_{1 \leq i \leq k, a_i \leq n}\{1+S_{n-a_i}\} & \text{otherwise}
+\end{cases}$  
+Then we can use the top down approach by first assign all $S_{a_k} = 1$. Since there are n subproblems and to solve each of them need k subproblems. So the total running time is O(nk).
