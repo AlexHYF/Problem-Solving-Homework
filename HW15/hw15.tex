@@ -43,7 +43,7 @@ One big disadvantage is that it takes a lot of time to find all the vertices tha
 adjacency-list, it takes a lot of time to remove a vertex. We can change Adj[\id{u}] to a dynamic array. All the verices in it is sorted. So we can use binary search to find an edge. And we can all decide all the vertices that are adjacent to a given vertex. But
 it also takes a lot of time to remove or add a vertex. 
 \section*{22.2-3}
-Because only line 2 and 13 checks the color of a node, and both of the statements check whether a node is white or not, any color other than white will give the same result. More precisely, a node will only enter the queue once, so after a node had already entered the queue, no matter it has come out or not it won't enter the queue again. So there is no need for we to color a node black after it dequed.
+Because only line 2 and 13 checks the color of a vertex, and both of the statements check whether a vertex is white or not, any color other than white will give the same result. More precisely, a vertex will only enter the queue once, so after a vertex had already entered the queue, no matter it has come out or not it won't enter the queue again. So there is no need for we to color a vertex black after it dequed.
 \section*{22.2-4}
 \begin{codebox}
 \Procname {$\proc{BFS(G,s)}$}
@@ -67,12 +67,12 @@ Because only line 2 and 13 checks the color of a node, and both of the statement
 \end{codebox}
 Running Time $O(V^2)$
 \section*{22.2-5}
-Since \id{u.d} = d(\id{s,v}), the distance between two node is independent from the way the graph is presented, so \id{u.d} is in dependent from the order in the adjacency-list.\\
+Since \id{u.d} = d(\id{s,v}), the distance between two  is independent from the way the graph is presented, so \id{u.d} is in dependent from the order in the adjacency-list.\\
  In Figure 22.3, if the adjacency-list of \id{w} is \id{\{x,t\}} rather than \id{\{t,x\}}, then \id{x} will enter the queue first thus makes \id{xu} be an edge in the breadth-first tree.
  \section*{22.3-6}
  The theorem 22.10 has already showed that there are only tree edges and back edges in a DFS of graph G. So we only need to show that for an edge (\id{u,v}) if (\id{u,v}) is encountered first then (\id{u,v}) is a tree edge otherwise it is a back edge.  (we must assume that \id{u} is discovered first, otherwise there is no difference between (\id{u,v}) and (\id{v,u})) So if (\id{u,v}) is discovered first, \id{v} must be white at that time. Because \id{v} is pushed into the stack after \id{u}, so when we are discovering \id{u}, \id{v} can't be in the stack, so it is either black or white. But if it is black then (\id{v,u}) must be already discovered. So \id{v} is white then (\id{u,v})  is a tree edge. As mentioned above while discovering (\id{u,v}), \id{v} can be either white or black, so if it is black, then (\id{v,u}) is first discovered, and when (\id{v,u}) is discovered, \id{u} is gray, so (\id{v,u}) is a back edge.
  \section*{22.3-7}
- To do this, an extra pointer is needed for all the nodes which points to the next node to discover, this pointer is set to the first element of the adjacency-list of each node at first.\\
+ To do this, an extra pointer is needed for all the vertices which points to the next vertices to discover, this pointer is set to the first element of the adjacency-list of each vertex at first.\\
  We only need to change DFS-VISIT.
  \begin{codebox}
  \Procname{$\proc{DFS-VISIT(G)}$}
@@ -93,7 +93,7 @@ Since \id{u.d} = d(\id{s,v}), the distance between two node is independent from 
   \li			\id{t.p.d} = \id{time}
   \li			\id{t.p.color} = \const{GRAY}
   \li			\func{PUSH(\id{S,t.p})}  \End
-  \li		Set \id{t.p} to the next node in the adjacency-list of t. \End
+  \li		Set \id{t.p} to the next vertex in the adjacency-list of t. \End
   \End
  \end{codebox}
  \section*{22.3-8}
@@ -142,7 +142,7 @@ this problem. Since there are \id{V} subproblems and the number
 of sub-subproblems equals to the outdgree of the corresponding
 vertex. So the running time is $O(E)$ .
 \section*{22.4-3}
-Just simply modify the code for BFS. If we discovered any nodes that
+Just simply modify the code for BFS. If we discovered any vertices that
 is not white, then we can concluded there is a cycle. As for the
 running time, if a graph contains no cycle, then there are at most
 \id{|V|-1} edges, so the running time is $O(\id{V})$. And if a graph
@@ -151,20 +151,20 @@ running time is still $O(\id{V})$.
 \section*{22.5-5}
 First compute the strongly connected component of \id{G}. This would
 take $O(\id{V}+\id{E})$ of time. Then for each tree we produced, we assign
-a number for each node as the number of vertex in the $G^{SCC}$, this would take $O(\id{V}+\id{E})$ of time. Then we
-go through all the adges. If the two vertices are in different tree, add them to
-the $E(G^{SCC})$, this only takes $O(E)$ of time. From Lemma 22.13, we know it is impossible for two nodes have more than one edge.
+a number for each vertex as the number of vertex in the $G^{SCC}$, this would take $O(\id{V}+\id{E})$ of time. Then we
+go through all the edges. If the two vertices are in different tree, add them to
+the $E(G^{SCC})$, this only takes $O(E)$ of time. From Lemma 22.13, we know it is impossible for two vertices have more than one edge.
 So the time complexity of this algorithm is $O(V+E)$.
 \section*{22.5-7}
 First compute the component graph of \id{G}. Then we apply topological sort to $\id{G^{SCC}}$.
-Then we get a linked list of strongly connected component. Then for every two adjacent nodes in the list,
+Then we get a linked list of strongly connected component. Then for every two adjacent vertices in the list,
 check whether all of them are directly connected. If so this graph is semiconnected, otherwise it isn't.
 \subsection*{Proof}
 Obviously a graph \id{G} is semiconnected if and only if $\id{G^{SCC}}$ is semiconnected. (I want to skip the proof of this, it's too obvious.)
-Since $\id{G^{SCC}}$ is a dag, we can apply topological sort to it. If every two adjacent nodes are directly connected, then it is semiconnected. But if
+Since $\id{G^{SCC}}$ is a dag, we can apply topological sort to it. If every two adjacent vertices are directly connected, then it is semiconnected. But if
 there exists two adjacent that are not directly connected, say \id{u} and \id{v}, and suppose \id{u} is before \id{v}. From the property of the topological sort,
 we know that a vertex can only be directly connected with the vertices after it. So for \id{v} it can only be directly connected with the vertices after it, and none of them are connected directly with
-\id{u}, so there isn't a \id{(v,u)} path. And for \id{u}, it only be connected with verticces after \id{v} and also none of them are directly connected to \id{v}. So there isn't a \id{(u,v)} path. So this graph is
+\id{u}, so there isn't a \id{(v,u)} path. And for \id{u}, it only be connected with vertices after \id{v} and also none of them are directly connected to \id{v}. So there isn't a \id{(u,v)} path. So this graph is
 not semiconnected, thus we finished the proof.\\
 The time complexity is \id{O(V+E)}.
 
