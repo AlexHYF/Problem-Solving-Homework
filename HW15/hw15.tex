@@ -153,8 +153,8 @@ First compute the strongly connected component of \id{G}. This would
 take $O(\id{V}+\id{E})$ of time. Then for each tree we produced, we assign
 a number for each vertex as the number of vertex in the $G^{SCC}$, this would take $O(\id{V}+\id{E})$ of time. Then we
 go through all the edges. If the two vertices are in different tree, add them to
-the $E(G^{SCC})$, this only takes $O(E)$ of time. From Lemma 22.13, we know it is impossible for two vertices have more than one edge.
-So the time complexity of this algorithm is $O(V+E)$.
+the $E(G^{SCC})$, this only takes $O(E)$ of time. There is a trick here to avoid repeated edges,
+for all the edges, we apply radix sort to the vertices pairs. So that all the repeated edges would aggregate, then it is a piece of cake. 
 \section*{22.5-7}
 First compute the component graph of \id{G}. Then we apply topological sort to $\id{G^{SCC}}$.
 Then we get a linked list of strongly connected component. Then for every two adjacent vertices in the list,
@@ -162,7 +162,7 @@ check whether all of them are directly connected. If so this graph is semiconnec
 \subsection*{Proof}
 Obviously a graph \id{G} is semiconnected if and only if $\id{G^{SCC}}$ is semiconnected. (I want to skip the proof of this, it's too obvious.)
 Since $\id{G^{SCC}}$ is a dag, we can apply topological sort to it. If every two adjacent vertices are directly connected, then it is semiconnected. But if
-there exists two adjacent that are not directly connected, say \id{u} and \id{v}, and suppose \id{u} is before \id{v}. From the property of the topological sort,
+there exist two adjacent vertices that are not directly connected, say \id{u} and \id{v}, and suppose \id{u} is before \id{v}. From the property of the topological sort,
 we know that a vertex can only be directly connected with the vertices after it. So for \id{v} it can only be directly connected with the vertices after it, and none of them are connected directly with
 \id{u}, so there isn't a \id{(v,u)} path. And for \id{u}, it only be connected with vertices after \id{v} and also none of them are directly connected to \id{v}. So there isn't a \id{(u,v)} path. So this graph is
 not semiconnected, thus we finished the proof.\\
